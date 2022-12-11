@@ -8,5 +8,11 @@ sealed class Command {
 
     data class Count(val field: String) : Command()
 
+    object Begin : Command()
+
+    object Rollback : Command()
+
+    object Commit : Command()
+
     data class Unknown(val instruction: String) : Command()
 }

@@ -28,6 +28,21 @@ object CommandExecutor {
             ExecutionResult.Success("$result")
         }
 
+        is Command.Begin -> {
+            storage.begin()
+            ExecutionResult.Success()
+        }
+
+        is Command.Rollback -> {
+            storage.rollback()
+            ExecutionResult.Success()
+        }
+
+        is Command.Commit -> {
+            storage.commit()
+            ExecutionResult.Success()
+        }
+
         is Command.Unknown -> ExecutionResult.Error("Can't parse command: ${command.instruction}")
     }
 }
