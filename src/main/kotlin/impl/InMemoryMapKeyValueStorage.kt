@@ -1,5 +1,6 @@
 package impl
 
+import extensions.collectVersioned
 import model.KeyValueStorageInterface
 
 class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
@@ -35,10 +36,8 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
     }
 
     private fun getCurrentMapVersion(): Map<String, String> {
-        return when (currentVersion) {
-            null -> storage
-            else -> versions[currentVersion] ?: emptyMap()
-        }
+        val lastVersion = currentVersion ?: return storage
+        return versions.collectVersioned(lastVersion)
     }
 
     private fun updateCurrentMapVersion(newVersion: Map<String, String>) {

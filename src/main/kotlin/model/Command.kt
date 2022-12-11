@@ -7,5 +7,6 @@ sealed class Command {
     data class Delete(val field: String) : Command()
 
     data class Count(val field: String) : Command()
+
     data class Unknown(val instruction: String) : Command()
 }
