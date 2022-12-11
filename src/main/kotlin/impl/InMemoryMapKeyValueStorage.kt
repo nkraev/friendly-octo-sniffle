@@ -3,13 +3,10 @@ package impl
 import model.KeyValueStorageInterface
 
 class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
-    override fun set(key: String, value: String) {
-        TODO("Not yet implemented")
-    }
+    private val map = mutableMapOf<String, String>()
+    override fun set(key: String, value: String) = map.set(key, value)
 
-    override fun get(key: String): String? {
-        TODO("Not yet implemented")
-    }
+    override fun get(key: String): String? = map[key]
 
     override fun delete(key: String) {
         TODO("Not yet implemented")
