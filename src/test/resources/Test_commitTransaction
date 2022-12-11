@@ -1,0 +1,7 @@
+> BEGIN
+> SET foo 456
+> COMMIT
+> ROLLBACK
+no transaction
+> GET foo
+456

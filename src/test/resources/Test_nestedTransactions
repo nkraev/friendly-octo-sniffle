@@ -1,0 +1,18 @@
+> SET foo 123
+> BEGIN
+> SET bar 456
+> SET foo 456
+> BEGIN
+> COUNT 456
+2
+> GET foo
+456
+> SET foo 789
+> GET foo
+789
+> ROLLBACK
+> GET foo
+456
+> ROLLBACK
+> GET foo
+123

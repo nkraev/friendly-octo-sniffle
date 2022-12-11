@@ -1,0 +1,16 @@
+> SET foo 123
+> SET bar abc
+> BEGIN
+> SET foo 456
+> GET foo
+456
+> SET bar def
+> GET bar
+def
+> ROLLBACK
+> GET foo
+123
+> GET bar
+abc
+> COMMIT
+no transaction

@@ -1,0 +1,3 @@
+> SET foo 123
+> GET foo
+123
