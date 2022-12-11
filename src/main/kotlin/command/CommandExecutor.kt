@@ -18,6 +18,11 @@ object CommandExecutor {
             ExecutionResult.Success()
         }
 
+        is Command.Delete -> {
+            storage.delete(command.field)
+            ExecutionResult.Success()
+        }
+
         is Command.Unknown -> ExecutionResult.Error("Can't parse command: ${command.instruction}")
     }
 }

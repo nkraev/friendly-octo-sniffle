@@ -9,7 +9,7 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
     override fun get(key: String): String? = map[key]
 
     override fun delete(key: String) {
-        TODO("Not yet implemented")
+        map.remove(key)
     }
 
     override fun count(value: String): Int {

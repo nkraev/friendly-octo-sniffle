@@ -1,0 +1,8 @@
+> GET foo
+key not set
+> SET foo abc
+> GET foo
+abc
+> DELETE foo
+> GET foo
+key not set
