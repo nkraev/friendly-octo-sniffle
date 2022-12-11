@@ -23,20 +23,37 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         getCurrentMapVersion().values.count { it == value }
 
     override fun begin() {
-        TODO("Not yet implemented")
+        currentVersion += 1
     }
 
     override fun commit() {
-        TODO("Not yet implemented")
+        if (currentVersion == 0) {
+            // TODO: error
+            return
+        }
+        val previousVersion = getPreviousVersion()
+        val previousMap = versions[previousVersion] ?: emptyMap()
+        versions[previousVersion] = previousMap + getCurrentMapVersion()
+        currentVersion = previousVersion
     }
 
     override fun rollback() {
-        TODO("Not yet implemented")
+        if (currentVersion == 0) {
+            // TODO: error
+            return
+        }
+        updateCurrentMapVersion(emptyMap())
+        currentVersion = getPreviousVersion()
     }
 
     private fun getCurrentMapVersion() = versions.collectVersioned(currentVersion)
 
     private fun updateCurrentMapVersion(newVersion: Map<String, String>) {
         versions[currentVersion] = newVersion
+    }
+
+    private fun getPreviousVersion(): Int = when (currentVersion) {
+        0 -> 0
+        else -> currentVersion - 1
     }
 }
