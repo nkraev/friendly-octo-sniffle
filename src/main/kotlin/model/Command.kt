@@ -15,4 +15,6 @@ sealed class Command {
     object Commit : Command()
 
     data class Unknown(val instruction: String) : Command()
+
+    data class ParseError(val message: String) : Command()
 }

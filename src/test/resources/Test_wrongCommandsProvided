@@ -1,0 +1,9 @@
+> get
+not enough arguments when parsing command: get
+> set foo
+not enough arguments when parsing command: set foo
+> get foo
+key not set
+> set foo 123
+> get foo
+123
