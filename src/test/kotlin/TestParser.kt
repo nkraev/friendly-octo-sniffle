@@ -1,3 +1,4 @@
+import command.CommandParser
 import model.Command
 import model.Result
 import model.TestParseResult
@@ -9,7 +10,7 @@ class TestParser {
         val results = mutableListOf<TestParseResult>()
         while (currentlyProcessing < test.size) {
             val line = test[currentlyProcessing]
-            val command = parseCommand(line.trim().substring(2).split(" "))
+            val command = CommandParser.parseCommand(line.trim().substring(2).split(" "))
             val hasOutput = currentlyProcessing + 1 < test.size && !test[currentlyProcessing + 1].isCommand()
             val result = if (hasOutput) parseResult(test[currentlyProcessing + 1]) else null
             val parseResult = when (result) {
@@ -21,12 +22,6 @@ class TestParser {
         }
 
         return results
-    }
-
-    private fun parseCommand(args: List<String>): Command = when (args[0]) {
-        "GET" -> Command.Get(args[1])
-        "SET" -> Command.Set(args[1], args[2])
-        else -> Command.Unknown(args[0])
     }
 
     private fun parseResult(line: String): Result = Result(line.trim())

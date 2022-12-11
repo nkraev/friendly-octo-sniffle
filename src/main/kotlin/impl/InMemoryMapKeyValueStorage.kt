@@ -1,6 +1,6 @@
 package impl
 
-import definitions.KeyValueStorageInterface
+import model.KeyValueStorageInterface
 
 class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
     override fun set(key: String, value: String) {

@@ -1,4 +1,4 @@
-package definitions
+package model
 
 interface KeyValueStorageInterface {
     /** store the value for key **/
