@@ -6,43 +6,23 @@ import model.KeyValueStorageInterface
 import model.OperationResult
 
 object CommandExecutor {
-    fun execute(command: Command, storage: KeyValueStorageInterface): ExecutionResult = when (command) {
-        is Command.Get -> {
-            when (val value = storage.get(command.field)) {
-                null -> ExecutionResult.Error("key not set")
-                else -> ExecutionResult.Success(value)
-            }
-        }
+    fun execute(command: Command, storage: KeyValueStorageInterface) = command.performAction(storage)
 
-        is Command.Set -> {
-            storage.set(command.field, command.value)
-            ExecutionResult.Success()
-        }
-
-        is Command.Delete -> {
-            storage.delete(command.field)
-            ExecutionResult.Success()
-        }
-
-        is Command.Count -> {
-            val result = storage.count(command.field)
-            ExecutionResult.Success("$result")
-        }
-
-        is Command.Begin -> {
-            storage.begin()
-            ExecutionResult.Success()
-        }
-
+    private fun Command.performAction(storage: KeyValueStorageInterface): ExecutionResult = when (this) {
+        is Command.Get -> storage.get(field).toExecutionResult()
+        is Command.Set -> storage.set(field, value).toExecutionResult()
+        is Command.Delete -> storage.delete(field).toExecutionResult()
+        is Command.Count -> storage.count(field).toExecutionResult()
+        is Command.Begin -> storage.begin().toExecutionResult()
         is Command.Rollback -> storage.rollback().toExecutionResult()
-
         is Command.Commit -> storage.commit().toExecutionResult()
-
-        is Command.Unknown -> ExecutionResult.Error("Can't parse command: ${command.instruction}")
+        is Command.Unknown -> ExecutionResult.Error("Can't parse command: $instruction")
     }
 
     private fun OperationResult.toExecutionResult() = when (this) {
-        is OperationResult.Success -> ExecutionResult.Success()
+        is OperationResult.Success<*> -> ExecutionResult.Success("$result")
         is OperationResult.Error -> ExecutionResult.Error(message)
     }
+
+    private fun Unit.toExecutionResult() = ExecutionResult.Success()
 }

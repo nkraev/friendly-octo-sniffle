@@ -8,7 +8,10 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
     private val versions = mutableMapOf<Int, Map<String, String>>()
     private var currentVersion: Int = 0
 
-    override fun get(key: String): String? = getCurrentMapVersion()[key]
+    override fun get(key: String): OperationResult = when (val result = getCurrentMapVersion()[key]) {
+        null -> OperationResult.Error("key not set")
+        else -> OperationResult.Success(result)
+    }
 
     override fun set(key: String, value: String) {
         val sourceMap = getCurrentMapVersion()
@@ -20,8 +23,8 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         updateCurrentMapVersion(sourceMap - key)
     }
 
-    override fun count(value: String): Int =
-        getCurrentMapVersion().values.count { it == value }
+    override fun count(value: String): OperationResult =
+        getCurrentMapVersion().values.count { it == value }.let { OperationResult.Success(it) }
 
     override fun begin() {
         currentVersion += 1
@@ -35,7 +38,7 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         val previousMap = versions[previousVersion] ?: emptyMap()
         versions[previousVersion] = previousMap + getCurrentMapVersion()
         currentVersion = previousVersion
-        return OperationResult.Success
+        return OperationResult.Success(Unit)
     }
 
     override fun rollback(): OperationResult {
@@ -44,7 +47,7 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         }
         updateCurrentMapVersion(emptyMap())
         currentVersion = getPreviousVersion()
-        return OperationResult.Success
+        return OperationResult.Success(Unit)
     }
 
     private fun getCurrentMapVersion() = versions.collectVersioned(currentVersion)
