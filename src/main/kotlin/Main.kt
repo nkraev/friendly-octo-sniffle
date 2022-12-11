@@ -1,7 +1,21 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+import command.CommandExecutor
+import command.CommandParser
+import impl.InMemoryMapKeyValueStorage
+import model.ExecutionResult
 
-    // Try adding program arguments via Run/Debug configuration.
-    // Learn more about running applications: https://www.jetbrains.com/help/idea/running-applications.html.
-    println("Program arguments: ${args.joinToString()}")
+fun main(args: Array<String>) {
+    val storage = InMemoryMapKeyValueStorage()
+
+    while (true) {
+        val line = readln()
+        if (line == "quit") {
+            return
+        }
+
+        val command = CommandParser.parseCommand(line.trim().split(" "))
+        when (val executionResult = CommandExecutor.execute(command, storage)) {
+            is ExecutionResult.Success -> executionResult.messageToPrint?.let { println(it) }
+            is ExecutionResult.Error -> println(executionResult.errorMessage)
+        }
+    }
 }
