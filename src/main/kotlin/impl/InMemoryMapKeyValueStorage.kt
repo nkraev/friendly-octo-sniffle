@@ -3,17 +3,24 @@ package impl
 import model.KeyValueStorageInterface
 
 class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
-    private val map = mutableMapOf<String, String>()
-    override fun set(key: String, value: String) = map.set(key, value)
+    private var storage = mapOf<String, String>()
+    private val versions = mutableMapOf<Int, Map<String, String>>()
+    private var currentVersion: Int? = null
 
-    override fun get(key: String): String? = map[key]
+    override fun get(key: String): String? = getCurrentMapVersion()[key]
+
+    override fun set(key: String, value: String) {
+        val sourceMap = getCurrentMapVersion()
+        updateCurrentMapVersion(sourceMap + (key to value))
+    }
 
     override fun delete(key: String) {
-        map.remove(key)
+        val sourceMap = getCurrentMapVersion()
+        updateCurrentMapVersion(sourceMap - key)
     }
 
     override fun count(value: String): Int =
-        map.values.count { it == value }
+        getCurrentMapVersion().values.count { it == value }
 
     override fun begin() {
         TODO("Not yet implemented")
@@ -27,4 +34,19 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         TODO("Not yet implemented")
     }
 
+    private fun getCurrentMapVersion(): Map<String, String> {
+        return when (currentVersion) {
+            null -> storage
+            else -> versions[currentVersion] ?: emptyMap()
+        }
+    }
+
+    private fun updateCurrentMapVersion(newVersion: Map<String, String>) {
+        val version = currentVersion
+        if (version != null) {
+            versions[version] = newVersion
+        } else {
+            storage = newVersion
+        }
+    }
 }
