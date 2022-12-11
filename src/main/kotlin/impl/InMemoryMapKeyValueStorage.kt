@@ -2,6 +2,7 @@ package impl
 
 import extensions.collectVersioned
 import model.KeyValueStorageInterface
+import model.OperationResult
 
 class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
     private val versions = mutableMapOf<Int, Map<String, String>>()
@@ -26,24 +27,24 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         currentVersion += 1
     }
 
-    override fun commit() {
+    override fun commit(): OperationResult {
         if (currentVersion == 0) {
-            // TODO: error
-            return
+            return OperationResult.Error("no transaction")
         }
         val previousVersion = getPreviousVersion()
         val previousMap = versions[previousVersion] ?: emptyMap()
         versions[previousVersion] = previousMap + getCurrentMapVersion()
         currentVersion = previousVersion
+        return OperationResult.Success
     }
 
-    override fun rollback() {
+    override fun rollback(): OperationResult {
         if (currentVersion == 0) {
-            // TODO: error
-            return
+            return OperationResult.Error("no transaction")
         }
         updateCurrentMapVersion(emptyMap())
         currentVersion = getPreviousVersion()
+        return OperationResult.Success
     }
 
     private fun getCurrentMapVersion() = versions.collectVersioned(currentVersion)

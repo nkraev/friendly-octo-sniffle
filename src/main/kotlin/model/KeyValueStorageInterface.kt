@@ -17,8 +17,13 @@ interface KeyValueStorageInterface {
     fun begin()
 
     /** complete the current transaction **/
-    fun commit()
+    fun commit(): OperationResult
 
     /** revert to state prior to BEGIN call **/
-    fun rollback()
+    fun rollback(): OperationResult
+}
+
+sealed class OperationResult {
+    object Success : OperationResult()
+    data class Error(val message: String) : OperationResult()
 }

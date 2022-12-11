@@ -3,6 +3,7 @@ package command
 import model.Command
 import model.ExecutionResult
 import model.KeyValueStorageInterface
+import model.OperationResult
 
 object CommandExecutor {
     fun execute(command: Command, storage: KeyValueStorageInterface): ExecutionResult = when (command) {
@@ -33,16 +34,15 @@ object CommandExecutor {
             ExecutionResult.Success()
         }
 
-        is Command.Rollback -> {
-            storage.rollback()
-            ExecutionResult.Success()
-        }
+        is Command.Rollback -> storage.rollback().toExecutionResult()
 
-        is Command.Commit -> {
-            storage.commit()
-            ExecutionResult.Success()
-        }
+        is Command.Commit -> storage.commit().toExecutionResult()
 
         is Command.Unknown -> ExecutionResult.Error("Can't parse command: ${command.instruction}")
+    }
+
+    private fun OperationResult.toExecutionResult() = when (this) {
+        is OperationResult.Success -> ExecutionResult.Success()
+        is OperationResult.Error -> ExecutionResult.Error(message)
     }
 }
