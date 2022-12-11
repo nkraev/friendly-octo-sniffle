@@ -1,0 +1,5 @@
+> GET foo
+key not set
+> SET foo 123
+> GET foo
+123
