@@ -4,9 +4,8 @@ import extensions.collectVersioned
 import model.KeyValueStorageInterface
 
 class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
-    private var storage = mapOf<String, String>()
     private val versions = mutableMapOf<Int, Map<String, String>>()
-    private var currentVersion: Int? = null
+    private var currentVersion: Int = 0
 
     override fun get(key: String): String? = getCurrentMapVersion()[key]
 
@@ -35,17 +34,9 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         TODO("Not yet implemented")
     }
 
-    private fun getCurrentMapVersion(): Map<String, String> {
-        val lastVersion = currentVersion ?: return storage
-        return versions.collectVersioned(lastVersion)
-    }
+    private fun getCurrentMapVersion() = versions.collectVersioned(currentVersion)
 
     private fun updateCurrentMapVersion(newVersion: Map<String, String>) {
-        val version = currentVersion
-        if (version != null) {
-            versions[version] = newVersion
-        } else {
-            storage = newVersion
-        }
+        versions[currentVersion] = newVersion
     }
 }
