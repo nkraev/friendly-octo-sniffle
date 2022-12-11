@@ -20,7 +20,11 @@ object CommandExecutor {
     }
 
     private fun OperationResult.toExecutionResult() = when (this) {
-        is OperationResult.Success<*> -> ExecutionResult.Success("$result")
+        is OperationResult.Success<*> -> {
+            val message = if (result != Unit) "$result" else null
+            ExecutionResult.Success(message)
+        }
+
         is OperationResult.Error -> ExecutionResult.Error(message)
     }
 

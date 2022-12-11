@@ -1,0 +1,12 @@
+> get foo
+key not set
+> set foo 123
+> get foo
+123
+> begin
+> set foo 456
+> get foo
+456
+> commit
+> get foo
+456

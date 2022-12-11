@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
 
     while (true) {
         val line = readln()
-        if (line == "quit") {
+        if (line.lowercase() == "quit") {
             return
         }
 
