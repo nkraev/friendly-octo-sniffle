@@ -12,9 +12,8 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         map.remove(key)
     }
 
-    override fun count(value: String): Int {
-        TODO("Not yet implemented")
-    }
+    override fun count(value: String): Int =
+        map.values.count { it == value }
 
     override fun begin() {
         TODO("Not yet implemented")

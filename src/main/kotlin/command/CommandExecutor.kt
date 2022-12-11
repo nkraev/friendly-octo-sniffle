@@ -23,6 +23,11 @@ object CommandExecutor {
             ExecutionResult.Success()
         }
 
+        is Command.Count -> {
+            val result = storage.count(command.field)
+            ExecutionResult.Success("$result")
+        }
+
         is Command.Unknown -> ExecutionResult.Error("Can't parse command: ${command.instruction}")
     }
 }
