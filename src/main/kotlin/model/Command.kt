@@ -14,6 +14,8 @@ sealed class Command {
 
     object Commit : Command()
 
+    object Dump : Command()
+
     data class Unknown(val instruction: String) : Command()
 
     data class ParseError(val message: String) : Command()

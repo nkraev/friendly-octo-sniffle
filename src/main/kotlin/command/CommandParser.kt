@@ -12,6 +12,7 @@ object CommandParser {
             "BEGIN" -> Command.Begin
             "ROLLBACK" -> Command.Rollback
             "COMMIT" -> Command.Commit
+            "DUMP" -> Command.Dump
             else -> Command.Unknown(command[0])
         }
     } catch (e: IndexOutOfBoundsException) {

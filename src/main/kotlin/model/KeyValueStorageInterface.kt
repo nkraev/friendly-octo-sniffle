@@ -21,6 +21,9 @@ interface KeyValueStorageInterface {
 
     /** revert to state prior to BEGIN call **/
     fun rollback(): OperationResult
+
+    /** Allows to print all the contents of all the versions for database **/
+    fun dump(): OperationResult
 }
 
 sealed class OperationResult {

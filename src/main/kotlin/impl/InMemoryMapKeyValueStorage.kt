@@ -50,6 +50,14 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         return OperationResult.Success(Unit)
     }
 
+    override fun dump(): OperationResult {
+        val result = versions
+            .map { (version, records) -> "$version: ${records.entries.joinToString()}" }
+            .joinToString("\n")
+
+        return OperationResult.Success(result)
+    }
+
     private fun getCurrentMapVersion() = versions.collectVersioned(currentVersion)
 
     private fun updateCurrentMapVersion(newVersion: Map<String, String>) {

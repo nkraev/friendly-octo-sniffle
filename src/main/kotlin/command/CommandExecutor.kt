@@ -16,6 +16,7 @@ object CommandExecutor {
         is Command.Begin -> storage.begin().toExecutionResult()
         is Command.Rollback -> storage.rollback().toExecutionResult()
         is Command.Commit -> storage.commit().toExecutionResult()
+        is Command.Dump -> storage.dump().toExecutionResult()
         is Command.Unknown -> ExecutionResult.Error("Can't parse command: $instruction")
         is Command.ParseError -> ExecutionResult.Error(message)
     }
