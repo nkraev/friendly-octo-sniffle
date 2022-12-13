@@ -1,0 +1,4 @@
+> get abc
+key not set
+> abc
+Can't parse command: abc
