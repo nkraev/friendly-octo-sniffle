@@ -31,7 +31,7 @@ class InMemoryMapKeyValueTestExecutor {
             parsed.forEach { it.assertExpected(storage) }
         } catch (e: TestExecutionError) {
             println("❌ Test failed")
-            return
+            throw e
         }
 
         println("✅ Test completed successfully!")
