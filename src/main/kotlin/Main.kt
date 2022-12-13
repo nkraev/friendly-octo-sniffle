@@ -7,6 +7,7 @@ fun main(args: Array<String>) {
     val storage = InMemoryMapKeyValueStorage()
 
     while (true) {
+        print("> ")
         val line = readln()
         if (line.lowercase() == "quit") {
             return
