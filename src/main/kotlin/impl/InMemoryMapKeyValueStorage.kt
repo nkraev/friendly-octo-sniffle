@@ -37,8 +37,7 @@ class InMemoryMapKeyValueStorage : KeyValueStorageInterface {
         val previousVersion = getPreviousVersion()
         val previousMap = versions[previousVersion] ?: emptyMap()
         versions[previousVersion] = previousMap + getCurrentMapVersion()
-        currentVersion = previousVersion
-        return OperationResult.Success(Unit)
+        return rollback()
     }
 
     override fun rollback(): OperationResult {
